@@ -115,6 +115,102 @@ select {
   white-space: nowrap;
 }
 
+.lab-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  gap: 12px;
+  width: min(360px, calc(100vw - 40px));
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 8px;
+  background: rgb(11 17 24 / 86%);
+  box-shadow: 0 18px 45px rgb(0 0 0 / 32%);
+  backdrop-filter: blur(12px);
+}
+
+.lab-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-panel-header strong {
+  color: #ffffff;
+}
+
+.lab-panel button {
+  min-height: 34px;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 6px;
+  color: #f7fafc;
+  background: rgb(255 255 255 / 8%);
+  cursor: pointer;
+}
+
+.lab-panel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.lab-panel-body {
+  display: grid;
+  gap: 10px;
+  color: #d8e3ea;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.lab-panel-body p,
+.lab-panel-body ul {
+  margin: 0;
+}
+
+.lab-panel-body ul {
+  padding-left: 18px;
+}
+
+.lab-panel-body label {
+  display: grid;
+  gap: 5px;
+  color: #9db2c0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.lab-panel-body input {
+  width: 100%;
+  min-height: 36px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 6px;
+  padding: 0 10px;
+  color: #ffffff;
+  background: rgb(255 255 255 / 8%);
+}
+
+.panel-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.panel-toggle {
+  width: 100%;
+}
+
+.panel-warning {
+  padding: 9px 10px;
+  border: 1px solid rgb(255 189 89 / 34%);
+  border-radius: 6px;
+  color: #ffe2aa;
+  background: rgb(255 189 89 / 12%);
+}
+
 canvas {
   display: block;
 }
@@ -136,5 +232,13 @@ canvas {
   .interaction-prompt strong {
     white-space: normal;
   }
-}
 
+  .lab-panel {
+    top: auto;
+    right: 12px;
+    bottom: 86px;
+    left: 12px;
+    width: auto;
+    max-height: 48vh;
+  }
+}

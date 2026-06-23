@@ -1,7 +1,14 @@
 import type { PlayerPosition } from '../../player/playerTypes';
 import type { WorldZoneId } from '../../data/world';
+import type { InteractableAction } from './interactableObjectTypes';
 
-export type InteractionType = 'zone-transition' | 'notice' | 'objective' | 'ppe-station' | 'lab-door';
+export type InteractionType =
+  | 'zone-transition'
+  | 'notice'
+  | 'objective'
+  | 'ppe-station'
+  | 'lab-door'
+  | 'lab-object';
 
 export type InteractionTarget = {
   id: string;
@@ -14,6 +21,7 @@ export type InteractionTarget = {
   nextObjective?: string;
   blockedMessage?: string;
   message?: string;
+  onInteractAction?: InteractableAction;
   requiresPPE?: boolean;
   xpReward?: number;
 };

@@ -1,16 +1,21 @@
 import { worldZones } from '../data/world';
 import { NPCStudent } from './NPCStudent';
+import { useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 
 const labZone = worldZones['molecular-biology-lab'];
 
-export function MolecularBiologyLabScene() {
+export function MolecularBiologyLabScene({ centrifugeRunning }: { centrifugeRunning: boolean }) {
   return (
     <group>
       <LabShell />
       <LabBenches />
       <UserDesk />
-      <Instruments />
+      <Instruments centrifugeRunning={centrifugeRunning} />
       <ChemicalShelf />
+      <WasteBin />
+      <LabExitDoor />
       <LabNPCs />
       <InteractionMarkers />
     </group>
@@ -86,7 +91,17 @@ function UserDesk() {
   );
 }
 
-function Instruments() {
+function Instruments({ centrifugeRunning }: { centrifugeRunning: boolean }) {
+  const centrifugeRotorRef = useRef<THREE.Group>(null);
+
+  useFrame((_, delta) => {
+    if (!centrifugeRunning || !centrifugeRotorRef.current) {
+      return;
+    }
+
+    centrifugeRotorRef.current.rotation.y += delta * 18;
+  });
+
   return (
     <group>
       <group position={[-3.9, 0, -5.4]}>
@@ -94,10 +109,20 @@ function Instruments() {
           <cylinderGeometry args={[0.55, 0.65, 0.72, 28]} />
           <meshStandardMaterial color="#d7dde2" roughness={0.42} />
         </mesh>
-        <mesh castShadow position={[0, 1.15, 0]}>
-          <cylinderGeometry args={[0.5, 0.5, 0.16, 28]} />
-          <meshStandardMaterial color="#8fa2af" roughness={0.38} />
-        </mesh>
+        <group ref={centrifugeRotorRef} position={[0, 1.15, 0]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.5, 0.5, 0.16, 28]} />
+            <meshStandardMaterial color={centrifugeRunning ? '#75e6da' : '#8fa2af'} roughness={0.38} />
+          </mesh>
+          <mesh castShadow position={[0.22, 0.1, 0]}>
+            <boxGeometry args={[0.38, 0.06, 0.08]} />
+            <meshStandardMaterial color="#263947" roughness={0.44} />
+          </mesh>
+          <mesh castShadow position={[-0.22, 0.1, 0]}>
+            <boxGeometry args={[0.38, 0.06, 0.08]} />
+            <meshStandardMaterial color="#263947" roughness={0.44} />
+          </mesh>
+        </group>
       </group>
       <group position={[5.0, 0, -5.0]}>
         <mesh castShadow receiveShadow position={[0, 0.65, 0]}>
@@ -150,6 +175,40 @@ function ChemicalShelf() {
   );
 }
 
+function WasteBin() {
+  return (
+    <group position={[-7.1, 0, -1.2]}>
+      <mesh castShadow receiveShadow position={[0, 0.45, 0]}>
+        <cylinderGeometry args={[0.34, 0.42, 0.9, 18]} />
+        <meshStandardMaterial color="#2f3a42" roughness={0.76} />
+      </mesh>
+      <mesh position={[0, 0.95, 0]}>
+        <torusGeometry args={[0.34, 0.035, 8, 18]} />
+        <meshStandardMaterial color="#d9e2e7" roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 1.08, 0]}>
+        <boxGeometry args={[0.7, 0.08, 0.18]} />
+        <meshStandardMaterial color="#ffb454" roughness={0.42} />
+      </mesh>
+    </group>
+  );
+}
+
+function LabExitDoor() {
+  return (
+    <group position={[0, 0, 8.76]}>
+      <mesh castShadow receiveShadow position={[0, 1.35, 0]}>
+        <boxGeometry args={[1.55, 2.7, 0.16]} />
+        <meshStandardMaterial color="#5d4037" roughness={0.7} />
+      </mesh>
+      <mesh castShadow position={[0.5, 1.22, -0.1]}>
+        <sphereGeometry args={[0.065, 16, 16]} />
+        <meshStandardMaterial color="#e0b75c" metalness={0.45} roughness={0.32} />
+      </mesh>
+    </group>
+  );
+}
+
 function LabNPCs() {
   return (
     <group>
@@ -176,4 +235,3 @@ function InteractionMarkers() {
     </group>
   );
 }
-

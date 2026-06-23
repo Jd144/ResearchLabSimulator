@@ -1,5 +1,6 @@
 import type { PlayerPosition } from '../player/playerTypes';
 import type { InteractionTarget } from '../features/interactions/interactionTypes';
+import { molecularBiologyLabInteractions } from './labInteractables';
 
 export type WorldZoneId =
   | 'hostel-room'
@@ -243,29 +244,6 @@ export const worldZones: Record<WorldZoneId, WorldZone> = {
       minZ: -8.5,
       maxZ: 8.5,
     },
-    interactions: [
-      {
-        id: 'user-lab-desk',
-        label: 'User Desk',
-        actionLabel: 'Press E',
-        type: 'notice',
-        position: { x: -5.6, y: 0, z: 5.1 },
-        interactionRadius: 1.5,
-        message: 'Your lab desk is ready. Notebook and assigned tasks will be added in the experiment phase.',
-        nextObjective: 'Inspect the lab equipment placeholders.',
-        xpReward: 5,
-      },
-      {
-        id: 'gel-electrophoresis-unit',
-        label: 'Gel Electrophoresis Unit',
-        actionLabel: 'Press E',
-        type: 'notice',
-        position: { x: 3.8, y: 0, z: -2.7 },
-        interactionRadius: 1.5,
-        message: 'Gel electrophoresis unit placeholder. SOP workflow will connect here later.',
-        nextObjective: 'Lab entry flow complete. Experiment workflow is next.',
-        xpReward: 5,
-      },
-    ],
+    interactions: molecularBiologyLabInteractions,
   },
 };

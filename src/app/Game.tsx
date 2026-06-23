@@ -8,14 +8,16 @@ import { LabFloorCorridorScene } from '../scenes/LabFloorCorridorScene';
 import { MolecularBiologyLabScene } from '../scenes/MolecularBiologyLabScene';
 import { PlayerController } from '../player/PlayerController';
 import type { WorldZone } from '../data/world';
+import type { LabRuntimeState } from '../features/experiments/labRuntimeTypes';
 import type { PlayerPosition } from '../player/playerTypes';
 
 type GameProps = {
   currentZone: WorldZone;
+  labRuntime: LabRuntimeState;
   onPlayerMove: (position: PlayerPosition) => void;
 };
 
-export function Game({ currentZone, onPlayerMove }: GameProps) {
+export function Game({ currentZone, labRuntime, onPlayerMove }: GameProps) {
   return (
     <Canvas shadows camera={{ position: [0, 4, 7], fov: 55 }}>
       <color attach="background" args={['#101820']} />
@@ -29,7 +31,7 @@ export function Game({ currentZone, onPlayerMove }: GameProps) {
         shadow-mapSize-height={1024}
       />
       <Sky sunPosition={[6, 8, 2]} turbidity={5} rayleigh={1.5} />
-      <ActiveScene zoneId={currentZone.id} />
+      <ActiveScene zoneId={currentZone.id} labRuntime={labRuntime} />
       <PlayerController
         bounds={currentZone.bounds}
         spawnPoint={currentZone.spawnPoint}
@@ -40,7 +42,13 @@ export function Game({ currentZone, onPlayerMove }: GameProps) {
   );
 }
 
-function ActiveScene({ zoneId }: { zoneId: WorldZone['id'] }) {
+function ActiveScene({
+  zoneId,
+  labRuntime,
+}: {
+  zoneId: WorldZone['id'];
+  labRuntime: LabRuntimeState;
+}) {
   if (zoneId === 'hostel-corridor') {
     return <HostelCorridorScene />;
   }
@@ -58,7 +66,7 @@ function ActiveScene({ zoneId }: { zoneId: WorldZone['id'] }) {
   }
 
   if (zoneId === 'molecular-biology-lab') {
-    return <MolecularBiologyLabScene />;
+    return <MolecularBiologyLabScene centrifugeRunning={labRuntime.centrifuge.isRunning} />;
   }
 
   return <HostelRoomScene />;
