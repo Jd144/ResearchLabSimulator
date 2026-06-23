@@ -130,6 +130,22 @@ public/models/characters/phd-scholar.glb
 public/models/characters/pi.glb
 ```
 
+Current imported local assets:
+
+```text
+public/models/lab/microscope.glb
+public/models/lab/lab-bench.glb
+public/models/lab/lab-desk.glb
+public/models/lab/erlenmeyer-flask.glb
+public/models/lab/blocks-lab-equipment.glb
+public/models/lab/refrigerator.glb
+public/models/lab/fridge.glb
+public/models/ppe/glove.glb
+public/models/ppe/glasses.glb
+public/models/characters/student-labcoat.glb
+public/models/characters/pi.glb
+```
+
 The loader checks these paths at runtime. If a model is present, the app loads it automatically. If a model is missing, the app keeps working with a clearly marked fallback and logs the missing path in the browser console only.
 
 Recommended model rules:

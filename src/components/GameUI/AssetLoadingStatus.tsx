@@ -2,14 +2,40 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   assetStatusEventName,
   getInitialAssetStatuses,
+  reportAssetStatus,
   type AssetStatusDetail,
 } from '../../features/assets/assetStatus';
+import { modelAssets } from '../../data/assetManifest';
 
 export function AssetLoadingStatus() {
   const [statuses, setStatuses] = useState(() => getInitialAssetStatuses());
   const statusList = useMemo(() => Object.values(statuses), [statuses]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
+    Object.values(modelAssets).forEach((asset) => {
+      fetch(asset.path, { method: 'HEAD', signal: controller.signal })
+        .then((response) => {
+          reportAssetStatus({
+            assetId: asset.id,
+            name: asset.name,
+            path: asset.path,
+            status: response.ok ? 'model loaded' : 'fallback used',
+          });
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) {
+            reportAssetStatus({
+              assetId: asset.id,
+              name: asset.name,
+              path: asset.path,
+              status: 'fallback used',
+            });
+          }
+        });
+    });
+
     const handleStatus = (event: Event) => {
       const { detail } = event as CustomEvent<AssetStatusDetail>;
       setStatuses((current) => ({
@@ -21,6 +47,7 @@ export function AssetLoadingStatus() {
     window.addEventListener(assetStatusEventName, handleStatus);
 
     return () => {
+      controller.abort();
       window.removeEventListener(assetStatusEventName, handleStatus);
     };
   }, []);

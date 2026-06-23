@@ -5,6 +5,12 @@ export type AssetId =
   | 'lab-bench'
   | 'lab-chair'
   | 'user-desk'
+  | 'erlenmeyer-flask'
+  | 'blocks-lab-equipment'
+  | 'refrigerator'
+  | 'fridge'
+  | 'ppe-glove'
+  | 'ppe-glasses'
   | 'chemical-shelf'
   | 'centrifuge'
   | 'microscope'
@@ -25,7 +31,7 @@ export const modelAssets: Record<AssetId, ModelAsset> = {
     id: 'student-humanoid',
     name: 'Student Labcoat Humanoid',
     path: '/models/characters/student-labcoat.glb',
-    available: false,
+    available: true,
     materialHint: 'mixed',
   },
   'phd-scholar': {
@@ -39,14 +45,14 @@ export const modelAssets: Record<AssetId, ModelAsset> = {
     id: 'pi',
     name: 'Principal Investigator Humanoid',
     path: '/models/characters/pi.glb',
-    available: false,
+    available: true,
     materialHint: 'mixed',
   },
   'lab-bench': {
     id: 'lab-bench',
     name: 'Modern Laboratory Bench',
     path: '/models/lab/lab-bench.glb',
-    available: false,
+    available: true,
     materialHint: 'stainless-steel',
   },
   'lab-chair': {
@@ -60,8 +66,50 @@ export const modelAssets: Record<AssetId, ModelAsset> = {
     id: 'user-desk',
     name: 'Researcher Desk',
     path: '/models/lab/lab-desk.glb',
-    available: false,
+    available: true,
     materialHint: 'wood',
+  },
+  'erlenmeyer-flask': {
+    id: 'erlenmeyer-flask',
+    name: 'Erlenmeyer Flask',
+    path: '/models/lab/erlenmeyer-flask.glb',
+    available: true,
+    materialHint: 'glass',
+  },
+  'blocks-lab-equipment': {
+    id: 'blocks-lab-equipment',
+    name: 'Blocks Lab Equipment',
+    path: '/models/lab/blocks-lab-equipment.glb',
+    available: true,
+    materialHint: 'mixed',
+  },
+  refrigerator: {
+    id: 'refrigerator',
+    name: 'Laboratory Refrigerator',
+    path: '/models/lab/refrigerator.glb',
+    available: true,
+    materialHint: 'mixed',
+  },
+  fridge: {
+    id: 'fridge',
+    name: 'Laboratory Fridge',
+    path: '/models/lab/fridge.glb',
+    available: true,
+    materialHint: 'mixed',
+  },
+  'ppe-glove': {
+    id: 'ppe-glove',
+    name: 'PPE Glove',
+    path: '/models/ppe/glove.glb',
+    available: true,
+    materialHint: 'plastic',
+  },
+  'ppe-glasses': {
+    id: 'ppe-glasses',
+    name: 'PPE Safety Glasses',
+    path: '/models/ppe/glasses.glb',
+    available: true,
+    materialHint: 'glass',
   },
   'chemical-shelf': {
     id: 'chemical-shelf',
@@ -81,7 +129,7 @@ export const modelAssets: Record<AssetId, ModelAsset> = {
     id: 'microscope',
     name: 'Research Microscope',
     path: '/models/lab/microscope.glb',
-    available: false,
+    available: true,
     materialHint: 'mixed',
   },
   'gel-electrophoresis-unit': {
