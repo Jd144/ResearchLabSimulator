@@ -1,0 +1,33 @@
+{
+  "stainlessSteel": {
+    "metalness": 0.82,
+    "roughness": 0.24,
+    "textureSet": "/textures/pbr/stainless-steel/"
+  },
+  "glass": {
+    "metalness": 0,
+    "roughness": 0.08,
+    "opacity": 0.48,
+    "textureSet": "/textures/pbr/glass/"
+  },
+  "laboratoryPlastic": {
+    "metalness": 0.04,
+    "roughness": 0.42,
+    "textureSet": "/textures/pbr/laboratory-plastic/"
+  },
+  "paintedWalls": {
+    "metalness": 0,
+    "roughness": 0.76,
+    "textureSet": "/textures/pbr/painted-wall/"
+  },
+  "tiles": {
+    "metalness": 0.02,
+    "roughness": 0.5,
+    "textureSet": "/textures/pbr/tile/"
+  },
+  "wood": {
+    "metalness": 0,
+    "roughness": 0.62,
+    "textureSet": "/textures/pbr/wood/"
+  }
+}

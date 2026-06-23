@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Sky } from '@react-three/drei';
+import * as THREE from 'three';
 import { CampusGroundScene } from '../scenes/CampusGroundScene';
 import { DepartmentLobbyScene } from '../scenes/DepartmentLobbyScene';
 import { HostelCorridorScene } from '../scenes/HostelCorridorScene';
@@ -7,6 +8,7 @@ import { HostelRoomScene } from '../scenes/HostelRoomScene';
 import { LabFloorCorridorScene } from '../scenes/LabFloorCorridorScene';
 import { MolecularBiologyLabScene } from '../scenes/MolecularBiologyLabScene';
 import { PlayerController } from '../player/PlayerController';
+import { LightingRig } from '../rendering/LightingRig';
 import type { WorldZone } from '../data/world';
 import type { LabRuntimeState } from '../features/experiments/labRuntimeTypes';
 import type { PlayerPosition } from '../player/playerTypes';
@@ -19,17 +21,20 @@ type GameProps = {
 
 export function Game({ currentZone, labRuntime, onPlayerMove }: GameProps) {
   return (
-    <Canvas shadows camera={{ position: [0, 4, 7], fov: 55 }}>
+    <Canvas
+      shadows
+      dpr={[1, 1.75]}
+      camera={{ position: [0, 4, 7], fov: 55 }}
+      gl={{ antialias: true }}
+      onCreated={({ gl }) => {
+        gl.toneMapping = THREE.ACESFilmicToneMapping;
+        gl.toneMappingExposure = 1.05;
+        gl.outputColorSpace = THREE.SRGBColorSpace;
+      }}
+    >
       <color attach="background" args={['#101820']} />
       <fog attach="fog" args={['#101820', 18, 38]} />
-      <ambientLight intensity={0.45} />
-      <directionalLight
-        castShadow
-        position={[5, 8, 5]}
-        intensity={1.4}
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-      />
+      <LightingRig />
       <Sky sunPosition={[6, 8, 2]} turbidity={5} rayleigh={1.5} />
       <ActiveScene zoneId={currentZone.id} labRuntime={labRuntime} />
       <PlayerController
