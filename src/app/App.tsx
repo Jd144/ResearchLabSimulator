@@ -3,6 +3,9 @@ import { Game } from './Game';
 import { HUD } from '../components/HUD/HUD';
 import { InteractionPrompt } from '../components/GameUI/InteractionPrompt';
 import { LabPanels } from '../components/GameUI/LabPanels';
+import { RoleSelection } from '../components/GameUI/RoleSelection';
+import { StudentProfilePanel } from '../components/GameUI/StudentProfilePanel';
+import { TeacherDashboard } from '../components/GameUI/TeacherDashboard';
 import { initialGameState } from '../data/gameState';
 import { worldZones } from '../data/world';
 import { molecularBiologyLabObjects } from '../data/labInteractables';
@@ -19,18 +22,20 @@ import type { GameState } from '../data/gameState';
 import type { TrainingMissionState } from '../features/experiments/agaroseGelTraining';
 import type { LabRuntimeState } from '../features/experiments/labRuntimeTypes';
 import type { InteractableAction } from '../features/interactions/interactableObjectTypes';
+import type { SavedTrainingData } from '../features/experiments/trainingSave';
+import type { UserRole } from '../features/auth/roleTypes';
 import type { PlayerPosition } from '../player/playerTypes';
 
 export function App() {
+  const [role, setRole] = useState<UserRole>(null);
+  const [savedData, setSavedData] = useState<SavedTrainingData>(() => loadTrainingSave());
   const [gameState, setGameState] = useState<GameState>(() => {
-    const saved = loadTrainingSave();
-
     return {
       ...initialGameState,
-      xp: saved.xp,
-      level: saved.level,
-      completedTraining: saved.completedTraining,
-      notebookEntries: saved.notebookEntries,
+      xp: savedData.xp,
+      level: savedData.level,
+      completedTraining: savedData.completedTraining,
+      notebookEntries: savedData.notebookEntries,
     };
   });
   const [labRuntime, setLabRuntime] = useState<LabRuntimeState>(initialLabRuntimeState);
@@ -247,6 +252,7 @@ export function App() {
     setTrainingMission({
       ...initialTrainingMissionState,
       status: 'in_progress',
+      startedAt: Date.now(),
     });
     setGameState((current) => ({
       ...current,
@@ -306,6 +312,7 @@ export function App() {
         mistakes,
         safetyFlags,
         contaminationScore,
+        completedAt: Date.now(),
       };
       const report = buildTrainingReport(completedMission);
       const notebookEntry = buildNotebookEntry(report);
@@ -342,6 +349,7 @@ export function App() {
           currentLevel: game.level,
           mission: finalMission,
         });
+        setSavedData(loadTrainingSave());
 
         return nextGame;
       });
@@ -381,10 +389,19 @@ export function App() {
     }));
   };
 
+  if (!role) {
+    return <RoleSelection onSelectRole={setRole} />;
+  }
+
+  if (role === 'teacher') {
+    return <TeacherDashboard savedData={savedData} onSwitchRole={setRole} />;
+  }
+
   return (
     <main className="app-shell">
       <Game currentZone={currentZone} labRuntime={labRuntime} onPlayerMove={setPlayerPosition} />
       <HUD gameState={gameState} nearbyInteraction={activeInteraction} />
+      <StudentProfilePanel savedData={savedData} onSwitchRole={setRole} />
       <InteractionPrompt interaction={activeInteraction} onInteract={handleInteraction} />
       <LabPanels
         labRuntime={labRuntime}

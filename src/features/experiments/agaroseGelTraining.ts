@@ -39,6 +39,8 @@ export type TrainingReport = {
   xpReward: number;
   result: 'Perfect' | 'Acceptable' | 'Failed';
   score: number;
+  safetyScore: number;
+  timeSpentSeconds: number;
 };
 
 export type TrainingMissionState = {
@@ -53,6 +55,8 @@ export type TrainingMissionState = {
   bufferVolume: number;
   wasteDisposed: boolean;
   unsafeActions: number;
+  startedAt?: number;
+  completedAt?: number;
   report?: TrainingReport;
   notebookEntry?: NotebookEntry;
   certifiedBadgeUnlocked: boolean;
@@ -132,6 +136,7 @@ export function getTrainingProgressPercent(mission: TrainingMissionState) {
 
 export function buildTrainingReport(mission: TrainingMissionState): TrainingReport {
   const score = Math.max(0, 100 - mission.mistakes.length * 15 - mission.contaminationScore * 10);
+  const safetyScore = Math.max(0, 100 - mission.contaminationScore * 15 - mission.unsafeActions * 10);
   const result = score >= 90 ? 'Perfect' : score >= 70 ? 'Acceptable' : 'Failed';
 
   return {
@@ -140,6 +145,8 @@ export function buildTrainingReport(mission: TrainingMissionState): TrainingRepo
     xpReward: score > 80 ? 100 : score >= 70 ? 60 : 20,
     result,
     score,
+    safetyScore,
+    timeSpentSeconds: mission.startedAt ? Math.max(1, Math.round(((mission.completedAt ?? Date.now()) - mission.startedAt) / 1000)) : 0,
   };
 }
 
@@ -156,4 +163,3 @@ export function buildNotebookEntry(report: TrainingReport): NotebookEntry {
     result: report.result,
   };
 }
-
