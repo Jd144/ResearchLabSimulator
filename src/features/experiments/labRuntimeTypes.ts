@@ -1,4 +1,4 @@
-export type ActiveLabPanel = 'task' | 'centrifuge' | 'inventory' | 'message' | null;
+export type ActiveLabPanel = 'task' | 'training' | 'centrifuge' | 'inventory' | 'message' | null;
 
 export type CentrifugeState = {
   rpm: number;
@@ -27,4 +27,3 @@ export const initialLabRuntimeState: LabRuntimeState = {
     isRunning: false,
   },
 };
-

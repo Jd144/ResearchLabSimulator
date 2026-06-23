@@ -6,16 +6,36 @@ import { LabPanels } from '../components/GameUI/LabPanels';
 import { initialGameState } from '../data/gameState';
 import { worldZones } from '../data/world';
 import { molecularBiologyLabObjects } from '../data/labInteractables';
+import {
+  agaroseGelTrainingSteps,
+  buildNotebookEntry,
+  buildTrainingReport,
+  initialTrainingMissionState,
+} from '../features/experiments/agaroseGelTraining';
 import { initialLabRuntimeState } from '../features/experiments/labRuntimeTypes';
+import { loadTrainingSave, persistCompletedTraining } from '../features/experiments/trainingSave';
 import { getNearestInteraction } from '../features/interactions/doorInteraction';
 import type { GameState } from '../data/gameState';
+import type { TrainingMissionState } from '../features/experiments/agaroseGelTraining';
 import type { LabRuntimeState } from '../features/experiments/labRuntimeTypes';
 import type { InteractableAction } from '../features/interactions/interactableObjectTypes';
 import type { PlayerPosition } from '../player/playerTypes';
 
 export function App() {
-  const [gameState, setGameState] = useState<GameState>(initialGameState);
+  const [gameState, setGameState] = useState<GameState>(() => {
+    const saved = loadTrainingSave();
+
+    return {
+      ...initialGameState,
+      xp: saved.xp,
+      level: saved.level,
+      completedTraining: saved.completedTraining,
+      notebookEntries: saved.notebookEntries,
+    };
+  });
   const [labRuntime, setLabRuntime] = useState<LabRuntimeState>(initialLabRuntimeState);
+  const [trainingMission, setTrainingMission] =
+    useState<TrainingMissionState>(initialTrainingMissionState);
   const [playerPosition, setPlayerPosition] = useState<PlayerPosition>({
     x: 0,
     y: 0,
@@ -219,6 +239,148 @@ export function App() {
     }));
   };
 
+  const handleOpenTraining = () => {
+    setLabRuntime((current) => ({ ...current, activePanel: 'training', panelMessage: '' }));
+  };
+
+  const handleStartTraining = () => {
+    setTrainingMission({
+      ...initialTrainingMissionState,
+      status: 'in_progress',
+    });
+    setGameState((current) => ({
+      ...current,
+      objective: 'Complete Agarose Gel Electrophoresis training.',
+      notice: 'Training mission started.',
+    }));
+  };
+
+  const handleAdvanceTraining = () => {
+    setTrainingMission((current) => {
+      if (current.status !== 'in_progress') {
+        return current;
+      }
+
+      const step = agaroseGelTrainingSteps[current.currentStepIndex];
+      const ppeReady = gameState.ppe.labCoat && gameState.ppe.gloves && gameState.ppe.goggles;
+      const mistakes = [...current.mistakes];
+      const safetyFlags = [...current.safetyFlags];
+      let contaminationScore = current.contaminationScore;
+
+      if (step.id === 'wear-ppe' && !ppeReady) {
+        mistakes.push('Contamination risk');
+        safetyFlags.push('PPE was missing at training start.');
+        contaminationScore += 2;
+      }
+
+      if (step.id === 'measure-agarose' && current.agaroseAmount !== 1) {
+        mistakes.push('Gel concentration incorrect');
+      }
+
+      if (step.id === 'add-buffer-volume' && current.bufferVolume !== 100) {
+        mistakes.push('Improper gel preparation');
+      }
+
+      if (step.id === 'analyze-result' && !current.wasteDisposed) {
+        safetyFlags.push('Waste disposal was not confirmed.');
+        contaminationScore += 1;
+      }
+
+      const completedStepIds = Array.from(new Set([...current.completedStepIds, step.id]));
+      const nextStepIndex = current.currentStepIndex + 1;
+
+      if (nextStepIndex < agaroseGelTrainingSteps.length) {
+        return {
+          ...current,
+          currentStepIndex: nextStepIndex,
+          completedStepIds,
+          mistakes,
+          safetyFlags,
+          contaminationScore,
+        };
+      }
+
+      const completedMission = {
+        ...current,
+        completedStepIds,
+        mistakes,
+        safetyFlags,
+        contaminationScore,
+      };
+      const report = buildTrainingReport(completedMission);
+      const notebookEntry = buildNotebookEntry(report);
+      const status = report.score >= 70 ? 'passed' : 'failed';
+      const certifiedBadgeUnlocked = report.score > 80;
+      const finalMission: TrainingMissionState = {
+        ...completedMission,
+        status,
+        report,
+        notebookEntry,
+        certifiedBadgeUnlocked,
+      };
+
+      setGameState((game) => {
+        const completedTraining = certifiedBadgeUnlocked
+          ? Array.from(new Set([...game.completedTraining, 'agarose-gel-electrophoresis']))
+          : game.completedTraining;
+        const notebookEntries = [...game.notebookEntries, notebookEntry];
+        const nextGame = {
+          ...game,
+          xp: game.xp + report.xpReward,
+          completedTraining,
+          notebookEntries,
+          notice: certifiedBadgeUnlocked
+            ? 'Agarose Gel Training Completed'
+            : `Training finished: ${report.result}`,
+          objective: certifiedBadgeUnlocked
+            ? 'Gel Electrophoresis Certified Badge unlocked.'
+            : 'Review the report and repeat training for certification.',
+        };
+
+        persistCompletedTraining({
+          currentXP: game.xp,
+          currentLevel: game.level,
+          mission: finalMission,
+        });
+
+        return nextGame;
+      });
+
+      return finalMission;
+    });
+  };
+
+  const handleSetAgaroseAmount = (amount: number) => {
+    setTrainingMission((current) => ({
+      ...current,
+      agaroseAmount: Number.isFinite(amount) ? amount : current.agaroseAmount,
+    }));
+  };
+
+  const handleSetBufferVolume = (volume: number) => {
+    setTrainingMission((current) => ({
+      ...current,
+      bufferVolume: Number.isFinite(volume) ? volume : current.bufferVolume,
+    }));
+  };
+
+  const handleDisposeWaste = () => {
+    setTrainingMission((current) => ({
+      ...current,
+      wasteDisposed: true,
+      safetyFlags: Array.from(new Set([...current.safetyFlags, 'Waste disposal confirmed.'])),
+    }));
+  };
+
+  const handleUnsafeAction = () => {
+    setTrainingMission((current) => ({
+      ...current,
+      unsafeActions: current.unsafeActions + 1,
+      contaminationScore: current.contaminationScore + 1,
+      safetyFlags: [...current.safetyFlags, 'Unsafe action recorded during analysis.'],
+    }));
+  };
+
   return (
     <main className="app-shell">
       <Game currentZone={currentZone} labRuntime={labRuntime} onPlayerMove={setPlayerPosition} />
@@ -226,8 +388,17 @@ export function App() {
       <InteractionPrompt interaction={activeInteraction} onInteract={handleInteraction} />
       <LabPanels
         labRuntime={labRuntime}
+        trainingMission={trainingMission}
+        ppe={gameState.ppe}
         centrifugeSoundLevel={centrifugeSoundLevel}
         onClose={handleClosePanel}
+        onOpenTraining={handleOpenTraining}
+        onStartTraining={handleStartTraining}
+        onAdvanceTraining={handleAdvanceTraining}
+        onSetAgaroseAmount={handleSetAgaroseAmount}
+        onSetBufferVolume={handleSetBufferVolume}
+        onDisposeWaste={handleDisposeWaste}
+        onUnsafeAction={handleUnsafeAction}
         onSetCentrifugeRPM={(rpm) =>
           updateCentrifuge((current) => ({ ...current, rpm: Number.isFinite(rpm) ? rpm : current.rpm }))
         }

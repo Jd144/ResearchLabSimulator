@@ -1,12 +1,24 @@
 import type { LabRuntimeState } from '../../features/experiments/labRuntimeTypes';
+import type { TrainingMissionState } from '../../features/experiments/agaroseGelTraining';
+import type { PPEState } from '../../features/ppe/ppeTypes';
 import { labInventoryItems } from '../../features/inventory/inventoryData';
+import { TrainingMissionPanel } from './TrainingMissionPanel';
 
 type CentrifugeSoundLevel = 'HIGH' | 'LOW' | 'SILENT';
 
 type LabPanelsProps = {
   labRuntime: LabRuntimeState;
+  trainingMission: TrainingMissionState;
+  ppe: PPEState;
   centrifugeSoundLevel: CentrifugeSoundLevel;
   onClose: () => void;
+  onOpenTraining: () => void;
+  onStartTraining: () => void;
+  onAdvanceTraining: () => void;
+  onSetAgaroseAmount: (amount: number) => void;
+  onSetBufferVolume: (volume: number) => void;
+  onDisposeWaste: () => void;
+  onUnsafeAction: () => void;
   onSetCentrifugeRPM: (rpm: number) => void;
   onSetCentrifugeTime: (timeMinutes: number) => void;
   onToggleCentrifugeBalance: () => void;
@@ -16,8 +28,17 @@ type LabPanelsProps = {
 
 export function LabPanels({
   labRuntime,
+  trainingMission,
+  ppe,
   centrifugeSoundLevel,
   onClose,
+  onOpenTraining,
+  onStartTraining,
+  onAdvanceTraining,
+  onSetAgaroseAmount,
+  onSetBufferVolume,
+  onDisposeWaste,
+  onUnsafeAction,
   onSetCentrifugeRPM,
   onSetCentrifugeTime,
   onToggleCentrifugeBalance,
@@ -37,7 +58,20 @@ export function LabPanels({
         </button>
       </header>
 
-      {labRuntime.activePanel === 'task' ? <TaskPanel /> : null}
+      {labRuntime.activePanel === 'task' ? <TaskPanel onOpenTraining={onOpenTraining} /> : null}
+
+      {labRuntime.activePanel === 'training' ? (
+        <TrainingMissionPanel
+          mission={trainingMission}
+          ppe={ppe}
+          onStart={onStartTraining}
+          onAdvance={onAdvanceTraining}
+          onSetAgaroseAmount={onSetAgaroseAmount}
+          onSetBufferVolume={onSetBufferVolume}
+          onDisposeWaste={onDisposeWaste}
+          onUnsafeAction={onUnsafeAction}
+        />
+      ) : null}
 
       {labRuntime.activePanel === 'centrifuge' ? (
         <CentrifugePanel
@@ -64,20 +98,24 @@ export function LabPanels({
 
 function getPanelTitle(panel: NonNullable<LabRuntimeState['activePanel']>) {
   if (panel === 'task') return 'Assigned Task';
+  if (panel === 'training') return 'Training Mission';
   if (panel === 'centrifuge') return 'Centrifuge Control';
   if (panel === 'inventory') return 'Inventory';
   return 'Lab Message';
 }
 
-function TaskPanel() {
+function TaskPanel({ onOpenTraining }: { onOpenTraining: () => void }) {
   return (
     <div className="lab-panel-body">
-      <p>Assigned task: complete Molecular Biology Lab orientation.</p>
+      <p>Assigned task: complete Agarose Gel Electrophoresis Training Simulator.</p>
       <ul>
-        <li>Inspect the centrifuge.</li>
-        <li>Review chemical shelf inventory.</li>
-        <li>Learn waste disposal rules.</li>
+        <li>Follow the SOP steps.</li>
+        <li>Validate agarose and buffer measurements.</li>
+        <li>Generate notebook, safety report, and training result.</li>
       </ul>
+      <button type="button" onClick={onOpenTraining}>
+        Open Training Simulator
+      </button>
     </div>
   );
 }
@@ -155,4 +193,3 @@ function InventoryPanel() {
     </div>
   );
 }
-

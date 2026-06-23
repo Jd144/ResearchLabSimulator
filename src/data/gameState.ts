@@ -1,5 +1,6 @@
 import type { WorldZoneId } from './world';
 import { initialPPEState, type PPEState } from '../features/ppe/ppeTypes';
+import type { NotebookEntry } from '../features/experiments/agaroseGelTraining';
 
 export type GameState = {
   zoneId: WorldZoneId;
@@ -10,6 +11,8 @@ export type GameState = {
   level: string;
   notice?: string;
   completedInteractions: string[];
+  completedTraining: string[];
+  notebookEntries: NotebookEntry[];
 };
 
 export const initialGameState: GameState = {
@@ -20,4 +23,6 @@ export const initialGameState: GameState = {
   xp: 0,
   level: 'Intern',
   completedInteractions: [],
+  completedTraining: [],
+  notebookEntries: [],
 };
