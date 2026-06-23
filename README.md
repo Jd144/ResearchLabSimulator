@@ -4,7 +4,7 @@
 
 RealLabVerse is a realistic virtual university campus and research laboratory training platform. The product is designed as an immersive 3D simulation where students move through a hostel, campus, department building, and laboratory before performing real laboratory workflows.
 
-This repository is currently in the **planning and architecture phase only**. Application code will be added later in controlled development phases.
+This repository now contains the first Phase 1 playable prototype foundation. The current build is intentionally small: a hostel room scene, placeholder student avatar, WASD movement, third-person camera, door interaction, and HUD.
 
 ## Vision
 
@@ -36,6 +36,28 @@ The first version should deliver one polished vertical slice:
 - Contamination tracking
 - Faculty dashboard MVP
 
+## Current Prototype Scope
+
+Implemented now:
+
+- React + Vite frontend project
+- Three.js scene through React Three Fiber
+- Hostel room scene
+- Placeholder student avatar
+- WASD movement
+- Third-person camera follow
+- Exit door interaction with `E`
+- HUD showing location, objective, XP, and level
+
+Not implemented yet:
+
+- Full campus
+- Full lab
+- Multiplayer
+- Login/backend
+- Payments
+- Dashboards
+
 ## Documentation
 
 - [Project Architecture](docs/architecture/PROJECT_ARCHITECTURE.md)
@@ -59,7 +81,31 @@ The first version should deliver one polished vertical slice:
 - Supabase Storage
 - Supabase Realtime
 
+## Run Locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Controls:
+
+- `W`, `A`, `S`, `D` or arrow keys to move
+- `E` near the hostel door to interact
+
 ## Development Rule
 
 Do not generate the entire application at once. Build RealLabVerse as a modular simulation platform, one system at a time.
-
