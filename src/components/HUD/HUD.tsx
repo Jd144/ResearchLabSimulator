@@ -15,6 +15,12 @@ export function HUD({ gameState }: HUDProps) {
         <span className="hud-label">Objective</span>
         <strong>{gameState.objective}</strong>
       </div>
+      {gameState.notice ? (
+        <div>
+          <span className="hud-label">Notice</span>
+          <strong>{gameState.notice}</strong>
+        </div>
+      ) : null}
       <div className="hud-stats">
         <div>
           <span className="hud-label">XP</span>
@@ -28,4 +34,3 @@ export function HUD({ gameState }: HUDProps) {
     </section>
   );
 }
-

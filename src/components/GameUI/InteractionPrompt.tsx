@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import type { InteractionState } from '../../features/interactions/interactionTypes';
 
 type InteractionPromptProps = {
-  interaction: InteractionState;
+  interaction: InteractionState | null;
   onInteract: () => void;
 };
 
 export function InteractionPrompt({ interaction, onInteract }: InteractionPromptProps) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'KeyE' && interaction.isAvailable) {
+      if (event.code === 'KeyE' && interaction?.isAvailable) {
         onInteract();
       }
     };
@@ -19,9 +19,9 @@ export function InteractionPrompt({ interaction, onInteract }: InteractionPrompt
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [interaction.isAvailable, onInteract]);
+  }, [interaction?.isAvailable, onInteract]);
 
-  if (!interaction.isAvailable) {
+  if (!interaction?.isAvailable) {
     return null;
   }
 
@@ -32,4 +32,3 @@ export function InteractionPrompt({ interaction, onInteract }: InteractionPrompt
     </section>
   );
 }
-

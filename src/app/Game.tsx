@@ -1,18 +1,22 @@
 import { Canvas } from '@react-three/fiber';
 import { Sky } from '@react-three/drei';
+import { CampusGroundScene } from '../scenes/CampusGroundScene';
+import { HostelCorridorScene } from '../scenes/HostelCorridorScene';
 import { HostelRoomScene } from '../scenes/HostelRoomScene';
 import { PlayerController } from '../player/PlayerController';
+import type { WorldZone } from '../data/world';
 import type { PlayerPosition } from '../player/playerTypes';
 
 type GameProps = {
+  currentZone: WorldZone;
   onPlayerMove: (position: PlayerPosition) => void;
 };
 
-export function Game({ onPlayerMove }: GameProps) {
+export function Game({ currentZone, onPlayerMove }: GameProps) {
   return (
     <Canvas shadows camera={{ position: [0, 4, 7], fov: 55 }}>
       <color attach="background" args={['#101820']} />
-      <fog attach="fog" args={['#101820', 15, 32]} />
+      <fog attach="fog" args={['#101820', 18, 38]} />
       <ambientLight intensity={0.45} />
       <directionalLight
         castShadow
@@ -22,8 +26,25 @@ export function Game({ onPlayerMove }: GameProps) {
         shadow-mapSize-height={1024}
       />
       <Sky sunPosition={[6, 8, 2]} turbidity={5} rayleigh={1.5} />
-      <HostelRoomScene />
-      <PlayerController onMove={onPlayerMove} />
+      <ActiveScene zoneId={currentZone.id} />
+      <PlayerController
+        bounds={currentZone.bounds}
+        spawnPoint={currentZone.spawnPoint}
+        zoneId={currentZone.id}
+        onMove={onPlayerMove}
+      />
     </Canvas>
   );
+}
+
+function ActiveScene({ zoneId }: { zoneId: WorldZone['id'] }) {
+  if (zoneId === 'hostel-corridor') {
+    return <HostelCorridorScene />;
+  }
+
+  if (zoneId === 'campus-ground') {
+    return <CampusGroundScene />;
+  }
+
+  return <HostelRoomScene />;
 }

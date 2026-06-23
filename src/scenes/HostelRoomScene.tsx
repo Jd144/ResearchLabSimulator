@@ -1,4 +1,6 @@
-import { hostelDoor } from '../data/hostelRoom';
+import { worldZones } from '../data/world';
+
+const hostelDoor = worldZones['hostel-room'].interactions[0];
 
 export function HostelRoomScene() {
   return (
@@ -102,4 +104,3 @@ function Guides() {
     </group>
   );
 }
-

@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react';
 import { Game } from './Game';
 import { HUD } from '../components/HUD/HUD';
 import { InteractionPrompt } from '../components/GameUI/InteractionPrompt';
-import { hostelDoor } from '../data/hostelRoom';
 import { initialGameState } from '../data/gameState';
-import { getDoorInteraction } from '../features/interactions/doorInteraction';
+import { worldZones } from '../data/world';
+import { getNearestInteraction } from '../features/interactions/doorInteraction';
 import type { GameState } from '../data/gameState';
 import type { PlayerPosition } from '../player/playerTypes';
 
@@ -16,35 +16,44 @@ export function App() {
     z: 2,
   });
 
-  const doorInteraction = useMemo(
-    () => getDoorInteraction(playerPosition, hostelDoor),
-    [playerPosition],
+  const currentZone = worldZones[gameState.zoneId];
+
+  const activeInteraction = useMemo(
+    () => getNearestInteraction(playerPosition, currentZone.interactions),
+    [currentZone.interactions, playerPosition],
   );
 
-  const handleExitDoor = () => {
-    if (!doorInteraction.isAvailable) {
+  const handleInteraction = () => {
+    if (!activeInteraction?.target) {
       return;
     }
 
+    const interaction = activeInteraction.target;
+
     setGameState((current) => {
-      if (current.exitDoorReached) {
-        return current;
-      }
+      const hasCompletedInteraction = current.completedInteractions.includes(interaction.id);
+      const xpReward = hasCompletedInteraction ? 0 : (interaction.xpReward ?? 0);
+      const nextZone = interaction.nextZoneId ? worldZones[interaction.nextZoneId] : null;
 
       return {
         ...current,
-        objective: 'Prototype complete: hostel exit reached. Campus unlock comes next.',
-        xp: current.xp + 25,
-        exitDoorReached: true,
+        zoneId: nextZone?.id ?? current.zoneId,
+        location: nextZone?.location ?? current.location,
+        objective: interaction.nextObjective ?? nextZone?.objective ?? current.objective,
+        notice: interaction.message ?? current.notice,
+        xp: current.xp + xpReward,
+        completedInteractions: hasCompletedInteraction
+          ? current.completedInteractions
+          : [...current.completedInteractions, interaction.id],
       };
     });
   };
 
   return (
     <main className="app-shell">
-      <Game onPlayerMove={setPlayerPosition} />
+      <Game currentZone={currentZone} onPlayerMove={setPlayerPosition} />
       <HUD gameState={gameState} />
-      <InteractionPrompt interaction={doorInteraction} onInteract={handleExitDoor} />
+      <InteractionPrompt interaction={activeInteraction} onInteract={handleInteraction} />
     </main>
   );
 }
