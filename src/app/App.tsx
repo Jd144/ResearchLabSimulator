@@ -6,6 +6,7 @@ import { LabPanels } from '../components/GameUI/LabPanels';
 import { RoleSelection } from '../components/GameUI/RoleSelection';
 import { StudentProfilePanel } from '../components/GameUI/StudentProfilePanel';
 import { TeacherDashboard } from '../components/GameUI/TeacherDashboard';
+import { AssetLoadingStatus } from '../components/GameUI/AssetLoadingStatus';
 import { initialGameState } from '../data/gameState';
 import { worldZones } from '../data/world';
 import { molecularBiologyLabObjects } from '../data/labInteractables';
@@ -401,6 +402,7 @@ export function App() {
     <main className="app-shell">
       <Game currentZone={currentZone} labRuntime={labRuntime} onPlayerMove={setPlayerPosition} />
       <HUD gameState={gameState} nearbyInteraction={activeInteraction} />
+      <AssetLoadingStatus />
       <StudentProfilePanel savedData={savedData} onSwitchRole={setRole} />
       <InteractionPrompt interaction={activeInteraction} onInteract={handleInteraction} />
       <LabPanels

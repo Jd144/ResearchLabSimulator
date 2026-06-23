@@ -1,5 +1,7 @@
 export type AssetId =
   | 'student-humanoid'
+  | 'phd-scholar'
+  | 'pi'
   | 'lab-bench'
   | 'lab-chair'
   | 'user-desk'
@@ -21,57 +23,71 @@ export type ModelAsset = {
 export const modelAssets: Record<AssetId, ModelAsset> = {
   'student-humanoid': {
     id: 'student-humanoid',
-    name: 'Student Humanoid Placeholder',
-    path: '/models/characters/student-humanoid.glb',
+    name: 'Student Labcoat Humanoid',
+    path: '/models/characters/student-labcoat.glb',
+    available: false,
+    materialHint: 'mixed',
+  },
+  'phd-scholar': {
+    id: 'phd-scholar',
+    name: 'PhD Scholar Humanoid',
+    path: '/models/characters/phd-scholar.glb',
+    available: false,
+    materialHint: 'mixed',
+  },
+  pi: {
+    id: 'pi',
+    name: 'Principal Investigator Humanoid',
+    path: '/models/characters/pi.glb',
     available: false,
     materialHint: 'mixed',
   },
   'lab-bench': {
     id: 'lab-bench',
     name: 'Modern Laboratory Bench',
-    path: '/models/lab/furniture/lab-bench.glb',
+    path: '/models/lab/lab-bench.glb',
     available: false,
     materialHint: 'stainless-steel',
   },
   'lab-chair': {
     id: 'lab-chair',
     name: 'Laboratory Chair',
-    path: '/models/lab/furniture/lab-chair.glb',
+    path: '/models/lab/lab-chair.glb',
     available: false,
     materialHint: 'plastic',
   },
   'user-desk': {
     id: 'user-desk',
     name: 'Researcher Desk',
-    path: '/models/lab/furniture/user-desk.glb',
+    path: '/models/lab/lab-desk.glb',
     available: false,
     materialHint: 'wood',
   },
   'chemical-shelf': {
     id: 'chemical-shelf',
     name: 'Chemical Storage Shelf',
-    path: '/models/lab/storage/chemical-shelf.glb',
+    path: '/models/lab/chemical-shelf.glb',
     available: false,
     materialHint: 'glass',
   },
   centrifuge: {
     id: 'centrifuge',
     name: 'Benchtop Centrifuge',
-    path: '/models/lab/instruments/centrifuge.glb',
+    path: '/models/lab/centrifuge.glb',
     available: false,
     materialHint: 'plastic',
   },
   microscope: {
     id: 'microscope',
     name: 'Research Microscope',
-    path: '/models/lab/instruments/microscope.glb',
+    path: '/models/lab/microscope.glb',
     available: false,
     materialHint: 'mixed',
   },
   'gel-electrophoresis-unit': {
     id: 'gel-electrophoresis-unit',
     name: 'Gel Electrophoresis Unit',
-    path: '/models/lab/instruments/gel-electrophoresis-unit.glb',
+    path: '/models/lab/gel-electrophoresis.glb',
     available: false,
     materialHint: 'glass',
   },
@@ -85,7 +101,7 @@ export const modelAssets: Record<AssetId, ModelAsset> = {
   'lab-door': {
     id: 'lab-door',
     name: 'Laboratory Exit Door',
-    path: '/models/building/lab-door.glb',
+    path: '/models/lab/lab-door.glb',
     available: false,
     materialHint: 'wood',
   },
@@ -96,4 +112,3 @@ export const environmentAssets = {
   tileAlbedo: '/textures/pbr/tile/albedo.jpg',
   paintedWallAlbedo: '/textures/pbr/painted-wall/albedo.jpg',
 };
-

@@ -105,13 +105,31 @@ function CentrifugeFallback({
 }) {
   return (
     <group>
-      <mesh castShadow receiveShadow position={[0, 0.72, 0]}>
-        <cylinderGeometry args={[0.55, 0.65, 0.72, 36]} />
+      <mesh castShadow receiveShadow position={[0, 0.58, 0]}>
+        <boxGeometry args={[1.25, 0.28, 0.95]} />
+        <meshStandardMaterial {...pbrMaterials.blackRubber} color="#2d3640" />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0, 0.92, 0]}>
+        <cylinderGeometry args={[0.62, 0.72, 0.7, 44]} />
         <meshStandardMaterial {...pbrMaterials.laboratoryPlastic} />
       </mesh>
-        <group ref={centrifugeRotorRef} position={[0, 1.15, 0]}>
+      <mesh castShadow receiveShadow position={[0, 1.31, 0]}>
+        <cylinderGeometry args={[0.58, 0.58, 0.1, 44]} />
+        <meshStandardMaterial {...pbrMaterials.glass} color="#d8f4ff" opacity={0.58} />
+      </mesh>
+      <mesh castShadow position={[0.46, 0.88, 0.48]}>
+        <boxGeometry args={[0.42, 0.2, 0.04]} />
+        <meshStandardMaterial color="#111827" roughness={0.38} />
+      </mesh>
+      {[-0.38, -0.22, -0.06].map((x) => (
+        <mesh key={x} castShadow position={[x, 0.88, 0.5]}>
+          <cylinderGeometry args={[0.035, 0.035, 0.035, 14]} />
+          <meshStandardMaterial color="#75e6da" emissive="#2c8f89" emissiveIntensity={0.35} />
+        </mesh>
+      ))}
+        <group ref={centrifugeRotorRef} position={[0, 1.19, 0]}>
           <mesh castShadow>
-            <cylinderGeometry args={[0.5, 0.5, 0.16, 28]} />
+            <cylinderGeometry args={[0.46, 0.46, 0.12, 36]} />
             <meshStandardMaterial color={running ? '#75e6da' : '#8fa2af'} metalness={0.16} roughness={0.26} />
           </mesh>
           <mesh castShadow position={[0.22, 0.1, 0]}>
@@ -137,18 +155,30 @@ function ChemicalShelfFallback() {
   return (
     <group>
       <mesh castShadow receiveShadow position={[0, 1.35, 0]}>
-        <boxGeometry args={[1.3, 2.7, 0.52]} />
+        <boxGeometry args={[1.45, 2.7, 0.56]} />
+        <meshStandardMaterial {...pbrMaterials.stainlessSteel} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[-0.38, 1.35, 0.3]}>
+        <boxGeometry args={[0.6, 2.28, 0.05]} />
+        <meshStandardMaterial {...pbrMaterials.glass} opacity={0.38} />
+      </mesh>
+      <mesh castShadow receiveShadow position={[0.38, 1.35, 0.3]}>
+        <boxGeometry args={[0.6, 2.28, 0.05]} />
+        <meshStandardMaterial {...pbrMaterials.glass} opacity={0.38} />
+      </mesh>
+      <mesh castShadow position={[0, 1.35, 0.34]}>
+        <boxGeometry args={[0.04, 2.36, 0.06]} />
         <meshStandardMaterial {...pbrMaterials.stainlessSteel} />
       </mesh>
       {[0.65, 1.25, 1.85].map((y) => (
-        <mesh key={y} position={[0, y, -0.3]}>
-          <boxGeometry args={[1.1, 0.08, 0.18]} />
-          <meshStandardMaterial {...pbrMaterials.glass} />
+        <mesh key={y} position={[0, y, 0.02]}>
+          <boxGeometry args={[1.18, 0.06, 0.42]} />
+          <meshStandardMaterial {...pbrMaterials.glass} opacity={0.5} />
         </mesh>
       ))}
       {[-0.32, 0, 0.32].map((x) => (
         <mesh key={x} castShadow position={[x, 1.05, -0.16]}>
-          <cylinderGeometry args={[0.07, 0.07, 0.36, 12]} />
+          <cylinderGeometry args={[0.07, 0.07, 0.42, 16]} />
           <meshStandardMaterial color={x === 0 ? '#ef8f6b' : '#8bd3dd'} roughness={0.24} transparent opacity={0.82} />
         </mesh>
       ))}
@@ -206,12 +236,18 @@ function LabBenchFallback() {
   return (
     <group>
       <mesh castShadow receiveShadow position={[0, 0.72, 0]}>
-        <boxGeometry args={[2.9, 0.24, 1.2]} />
-        <meshStandardMaterial {...pbrMaterials.stainlessSteel} />
+        <boxGeometry args={[3.0, 0.16, 1.25]} />
+        <meshStandardMaterial {...pbrMaterials.blackRubber} color="#14191f" />
       </mesh>
-      <mesh castShadow receiveShadow position={[0, 0.42, 0]}>
-        <boxGeometry args={[2.7, 0.72, 0.95]} />
-        <meshStandardMaterial {...pbrMaterials.laboratoryPlastic} color="#8b98a3" />
+      {[[-1.25, -0.48], [1.25, -0.48], [-1.25, 0.48], [1.25, 0.48]].map(([x, z]) => (
+        <mesh key={`${x}-${z}`} castShadow receiveShadow position={[x, 0.34, z]}>
+          <cylinderGeometry args={[0.055, 0.055, 0.68, 14]} />
+          <meshStandardMaterial {...pbrMaterials.stainlessSteel} />
+        </mesh>
+      ))}
+      <mesh castShadow receiveShadow position={[0, 0.24, 0]}>
+        <boxGeometry args={[2.55, 0.1, 0.85]} />
+        <meshStandardMaterial {...pbrMaterials.stainlessSteel} color="#aebbc2" />
       </mesh>
     </group>
   );
@@ -263,18 +299,28 @@ function MicroscopeFallback() {
         <boxGeometry args={[1.1, 0.28, 0.8]} />
         <meshStandardMaterial {...pbrMaterials.laboratoryPlastic} />
       </mesh>
-      <mesh castShadow position={[0, 1.12, -0.08]}>
-        <cylinderGeometry args={[0.12, 0.12, 0.8, 18]} />
+      <mesh castShadow position={[-0.12, 1.1, -0.05]} rotation={[0, 0, -0.22]}>
+        <cylinderGeometry args={[0.12, 0.16, 0.85, 18]} />
         <meshStandardMaterial {...pbrMaterials.blackRubber} />
       </mesh>
-      <mesh castShadow position={[0.2, 1.55, -0.08]}>
-        <boxGeometry args={[0.62, 0.18, 0.28]} />
+      <mesh castShadow position={[0.26, 1.52, -0.08]} rotation={[0, 0, 0.15]}>
+        <boxGeometry args={[0.72, 0.18, 0.28]} />
         <meshStandardMaterial {...pbrMaterials.blackRubber} />
       </mesh>
-      <mesh castShadow position={[0.28, 1.72, -0.08]}>
-        <cylinderGeometry args={[0.08, 0.08, 0.34, 16]} />
+      <mesh castShadow position={[0.46, 1.68, -0.08]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.08, 0.08, 0.34, 18]} />
         <meshStandardMaterial {...pbrMaterials.glass} />
       </mesh>
+      <mesh castShadow position={[0.1, 0.88, 0.02]}>
+        <boxGeometry args={[0.58, 0.06, 0.46]} />
+        <meshStandardMaterial {...pbrMaterials.stainlessSteel} />
+      </mesh>
+      {[-0.12, 0.05, 0.22].map((x) => (
+        <mesh key={x} castShadow position={[x, 1.28, -0.09]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.045, 0.045, 0.22, 14]} />
+          <meshStandardMaterial {...pbrMaterials.glass} />
+        </mesh>
+      ))}
     </group>
   );
 }
@@ -283,17 +329,27 @@ function GelUnitFallback() {
   return (
     <group>
       <mesh castShadow receiveShadow position={[0, 0.68, 0]}>
-        <boxGeometry args={[1.6, 0.34, 1.0]} />
+        <boxGeometry args={[1.72, 0.28, 1.04]} />
         <meshStandardMaterial {...pbrMaterials.laboratoryPlastic} color="#c7d9e8" />
       </mesh>
       <mesh position={[0, 0.89, 0]}>
-        <boxGeometry args={[1.25, 0.08, 0.68]} />
+        <boxGeometry args={[1.3, 0.08, 0.7]} />
         <meshStandardMaterial {...pbrMaterials.glass} color="#7cd1ef" opacity={0.72} />
       </mesh>
       <mesh castShadow position={[0.84, 0.82, 0]}>
         <boxGeometry args={[0.12, 0.24, 0.74]} />
         <meshStandardMaterial {...pbrMaterials.blackRubber} />
       </mesh>
+      <mesh castShadow position={[-0.84, 0.82, 0]}>
+        <boxGeometry args={[0.12, 0.24, 0.74]} />
+        <meshStandardMaterial color="#c94f4f" metalness={0.12} roughness={0.36} />
+      </mesh>
+      {[-0.36, -0.18, 0, 0.18, 0.36].map((x) => (
+        <mesh key={x} castShadow position={[x, 0.96, -0.18]}>
+          <boxGeometry args={[0.045, 0.16, 0.46]} />
+          <meshStandardMaterial {...pbrMaterials.laboratoryPlastic} color="#f1f5f7" />
+        </mesh>
+      ))}
     </group>
   );
 }

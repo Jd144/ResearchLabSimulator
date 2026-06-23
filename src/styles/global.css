@@ -351,6 +351,56 @@ select {
   grid-column: span 3;
 }
 
+.asset-status-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: min(330px, calc(100vw - 40px));
+  max-height: 34vh;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 8px;
+  background: rgb(12 18 26 / 76%);
+  box-shadow: 0 18px 45px rgb(0 0 0 / 24%);
+  backdrop-filter: blur(12px);
+}
+
+.asset-status-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.asset-status-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.75rem;
+}
+
+.asset-status-row span {
+  min-width: 0;
+  overflow: hidden;
+  color: #d8e3ea;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.asset-status-row strong {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.asset-loaded {
+  color: #75e6da;
+}
+
+.asset-fallback {
+  color: #ffce7a;
+}
+
 .dashboard-screen {
   overflow: auto;
 }
@@ -422,6 +472,15 @@ canvas {
     left: 12px;
     width: auto;
     max-height: 48vh;
+  }
+
+  .asset-status-panel {
+    top: auto;
+    right: 12px;
+    bottom: calc(34vh + 24px);
+    left: 12px;
+    width: auto;
+    max-height: 22vh;
   }
 
   .student-profile-panel {

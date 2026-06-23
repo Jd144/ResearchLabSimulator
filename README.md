@@ -112,6 +112,35 @@ Controls:
 - `W`, `A`, `S`, `D` or arrow keys to move
 - `E` near highlighted objects to interact
 
+## How to Add Real 3D Models
+
+RealLabVerse now has a GLB/GLTF-ready asset loader. Place production-ready `.glb` files in these exact locations and filenames:
+
+```text
+public/models/lab/centrifuge.glb
+public/models/lab/microscope.glb
+public/models/lab/lab-bench.glb
+public/models/lab/lab-chair.glb
+public/models/lab/lab-desk.glb
+public/models/lab/chemical-shelf.glb
+public/models/lab/gel-electrophoresis.glb
+public/models/lab/lab-door.glb
+public/models/characters/student-labcoat.glb
+public/models/characters/phd-scholar.glb
+public/models/characters/pi.glb
+```
+
+The loader checks these paths at runtime. If a model is present, the app loads it automatically. If a model is missing, the app keeps working with a clearly marked fallback and logs the missing path in the browser console only.
+
+Recommended model rules:
+
+- Export as `.glb`.
+- Use real-world scale where possible.
+- Keep origins near the object base/center.
+- Use compressed textures for production.
+- Keep PBR texture maps under `public/textures/`.
+- Keep material notes under `public/materials/`.
+
 ## Development Rule
 
 Do not generate the entire application at once. Build RealLabVerse as a modular simulation platform, one system at a time.
