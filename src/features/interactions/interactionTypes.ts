@@ -1,7 +1,7 @@
 import type { PlayerPosition } from '../../player/playerTypes';
 import type { WorldZoneId } from '../../data/world';
 
-export type InteractionType = 'zone-transition' | 'notice' | 'objective';
+export type InteractionType = 'zone-transition' | 'notice' | 'objective' | 'ppe-station' | 'lab-door';
 
 export type InteractionTarget = {
   id: string;
@@ -12,7 +12,9 @@ export type InteractionTarget = {
   interactionRadius: number;
   nextZoneId?: WorldZoneId;
   nextObjective?: string;
+  blockedMessage?: string;
   message?: string;
+  requiresPPE?: boolean;
   xpReward?: number;
 };
 

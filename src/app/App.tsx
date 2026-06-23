@@ -31,15 +31,30 @@ export function App() {
     const interaction = activeInteraction.target;
 
     setGameState((current) => {
+      const ppeComplete = current.ppe.labCoat && current.ppe.gloves && current.ppe.goggles;
+
+      if (interaction.type === 'lab-door' && interaction.requiresPPE && !ppeComplete) {
+        return {
+          ...current,
+          notice: interaction.blockedMessage ?? 'PPE required before lab entry',
+          objective: 'Equip PPE at the station before entering the Molecular Biology Lab.',
+        };
+      }
+
       const hasCompletedInteraction = current.completedInteractions.includes(interaction.id);
       const xpReward = hasCompletedInteraction ? 0 : (interaction.xpReward ?? 0);
       const nextZone = interaction.nextZoneId ? worldZones[interaction.nextZoneId] : null;
+      const nextPPE =
+        interaction.type === 'ppe-station'
+          ? { labCoat: true, gloves: true, goggles: true }
+          : current.ppe;
 
       return {
         ...current,
         zoneId: nextZone?.id ?? current.zoneId,
         location: nextZone?.location ?? current.location,
         objective: interaction.nextObjective ?? nextZone?.objective ?? current.objective,
+        ppe: nextPPE,
         notice: interaction.message ?? current.notice,
         xp: current.xp + xpReward,
         completedInteractions: hasCompletedInteraction
@@ -52,7 +67,7 @@ export function App() {
   return (
     <main className="app-shell">
       <Game currentZone={currentZone} onPlayerMove={setPlayerPosition} />
-      <HUD gameState={gameState} />
+      <HUD gameState={gameState} nearbyInteraction={activeInteraction} />
       <InteractionPrompt interaction={activeInteraction} onInteract={handleInteraction} />
     </main>
   );

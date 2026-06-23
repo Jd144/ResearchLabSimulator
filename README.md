@@ -45,11 +45,15 @@ Implemented now:
 - Hostel room scene
 - Hostel corridor scene
 - Campus ground scene
+- Department lobby scene
+- Lab floor corridor scene
+- Basic Molecular Biology Lab scene
 - Placeholder student avatar
 - WASD movement
 - Third-person camera follow
-- Exit door, notice board, stairs, lift, and department approach interactions with `E`
-- HUD showing location, objective, XP, and level
+- Exit door, notice board, reception, stairs, lift, PPE station, and lab door interactions with `E`
+- PPE-gated Molecular Biology Lab entry
+- HUD showing location, objective, PPE status, nearby interaction, XP, and level
 
 Not implemented yet:
 

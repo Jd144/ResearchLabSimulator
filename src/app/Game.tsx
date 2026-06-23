@@ -1,8 +1,11 @@
 import { Canvas } from '@react-three/fiber';
 import { Sky } from '@react-three/drei';
 import { CampusGroundScene } from '../scenes/CampusGroundScene';
+import { DepartmentLobbyScene } from '../scenes/DepartmentLobbyScene';
 import { HostelCorridorScene } from '../scenes/HostelCorridorScene';
 import { HostelRoomScene } from '../scenes/HostelRoomScene';
+import { LabFloorCorridorScene } from '../scenes/LabFloorCorridorScene';
+import { MolecularBiologyLabScene } from '../scenes/MolecularBiologyLabScene';
 import { PlayerController } from '../player/PlayerController';
 import type { WorldZone } from '../data/world';
 import type { PlayerPosition } from '../player/playerTypes';
@@ -44,6 +47,18 @@ function ActiveScene({ zoneId }: { zoneId: WorldZone['id'] }) {
 
   if (zoneId === 'campus-ground') {
     return <CampusGroundScene />;
+  }
+
+  if (zoneId === 'department-lobby') {
+    return <DepartmentLobbyScene />;
+  }
+
+  if (zoneId === 'lab-floor-corridor') {
+    return <LabFloorCorridorScene />;
+  }
+
+  if (zoneId === 'molecular-biology-lab') {
+    return <MolecularBiologyLabScene />;
   }
 
   return <HostelRoomScene />;
